@@ -3,14 +3,20 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using API.Data;
 using API.Entities;
+using API.Controllers;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Api.Controllers;
-[ApiController]
-[Route("api/[controller]")]
-    public class MembersController(AppDbContext _context) : ControllerBase
+
+
+    [ApiController]
+    [Route("api/[controller]")]
+    [Authorize]
+    public class MembersController(AppDbContext _context) : BaseApiController
     {
         // GET: api/Members
         [HttpGet]
+        [AllowAnonymous]
         public async Task<ActionResult<IReadOnlyList<AppUser>>> GetMembers()
         {
             var members = await _context.Users.ToListAsync();
@@ -18,6 +24,7 @@ namespace Api.Controllers;
         }
 
         // GET: api/Members/5
+     
         [HttpGet("{id}")]
         public async Task<ActionResult<AppUser>> GetMember(string id)
         {
